@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <script src = "jquery-3.3.1.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+        <style>
+            html {
+                font-family: 'Montserrat', sans-serif;
+            }
+            body {
+                background: radial-gradient(circle, rgb(235, 238, 241), rgb(214, 34, 2), rgb(214, 164, 2), rgb(150, 214, 2), rgb(2, 189, 214));
+                text-align: center;
+            }
+
+            #game {
+                margin-top: 50px;
+                margin-bottom: 50px;
+            }
+
+            #usedSet {
+                margin-top: 100px;
+                margin-bottom: 60px;
+            }
+
+            #alerts {
+                margin-top: 50px;
+                margin-bottom: 100px;
+            }
+
+            #number {
+                display: flex;
+                justify-content: center;
+                font-size: 50px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>Hangman Game</h1>
+        </header>
+        
+        <div id="game">
+            -
+        </div>
+
+        <div id="usedSet">
+            -
+        </div>
+
+        <div id="number">
+            0
+        </div>
+
+        <div id="alerts">
+            -
+        </div>
+       
+
+        <input type="text" placeholder="Enter Letter Guess here" id="guess">
+        <button id="sub">Guess</button>
+
+        
+        <script>
+        $(document).ready(function() {
+            var word = "eucalyptus";
+            var counter = 0;
+            var guessedArray = [];
+            var used = new Array();
+            var temp = "";
+            
+            function setUp() {
+                for(i = 0; i < word.length; i++) {
+                    guessedArray.push("_ ");
+                }
+                document.getElementById("game").innerHTML = guessedArray.toString();
+            }
+            setUp();
+
+            document.getElementById("sub").addEventListener("click", guessLetter);
+            function guessLetter() {
+                var guess = "" +document.getElementById("guess").value;
+                if(counter >= 10) {
+                    document.getElementById("alerts").innerHTML = "You've already guessed 10 times! The word is " +word;
+                }
+                else if(guess.length > 1) {
+                    document.getElementById("alerts").innerHTML = "Please enter in one character";
+                }
+                else if(guessedArray.toString() === word) {
+                    document.getElementById("alerts").innerHTML = "You win!";
+                }
+                else if(word.indexOf(guess) > -1 && counter < 10) {
+                    for(i = 0; i < word.length; i++) {
+                        if(word.charAt(i) === guess) {
+                            guessedArray[i] = word.charAt(i);
+                        }
+                    }
+                    document.getElementById("game").innerHTML = guessedArray.toString();
+                    document.getElementById("alerts").innerHTML = "Good guess.";
+                }
+                else {
+                    document.getElementById("alerts").innerHTML = "Incorrect!";
+                    if(counter < 1) {
+                        used.push(guess);
+                        counter++;
+                    }
+                    else if(used.indexOf(guess) === -1) {
+                        counter++;
+                        used.push(guess);
+                        document.getElementById("usedSet").innerHTML = used.toString();
+                    } 
+                    else {
+                        document.getElementById("alerts").innerHTML = "You already guessed that.";
+                    }
+                }
+                if(counter === 10) {
+                    document.getElementById("usedSet").innerHTML = used.toString();
+                    document.getElementById("alerts").innerHTML = "You've guessed 10 times! The word is " +word;
+                }
+                document.getElementById("number").innerHTML = counter;
+            }   
+
+            function appendString(v1, v2, s1) {
+                temp+=v1;
+            }
+        });
+        </script>
+    </body>
+</html>
